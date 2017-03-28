@@ -12,7 +12,7 @@ library(ggplot2)
 library(gridExtra)
 library(shinyFiles)
 print(getwd())
-source("../mosaiq.R")
+source("mosaiq.R")
 settings = ''
 roots = c(wd='~/')
 ui <- shinyUI(fluidPage(
