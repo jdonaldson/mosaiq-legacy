@@ -8,6 +8,7 @@
 #
 
 library(shiny)
+options(shiny.launch.browser=TRUE)
 library(ggplot2)
 library(gridExtra)
 library(shinyFiles)
