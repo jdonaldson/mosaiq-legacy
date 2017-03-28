@@ -11,7 +11,6 @@ library(shiny)
 library(ggplot2)
 library(gridExtra)
 library(shinyFiles)
-library(readr)
 print(getwd())
 source("../mosaiq.R")
 settings = ''
@@ -22,7 +21,8 @@ ui <- shinyUI(fluidPage(
     sidebarPanel(
       shinyFilesButton('file', 'File select', 'Please select a file', FALSE),
       verbatimTextOutput('filepaths'),
-      uiOutput("choose_fields")
+      uiOutput("choose_fields"),
+      uiOutput("choose_target_levels")
     ),
     mainPanel(
       plotOutput("plot",height="600px")
@@ -41,7 +41,7 @@ server <- shinyServer(function(input, output, session) {
     values$datapath
   })
   observeEvent(values$datapath,{
-    dat = read.csv(values$datapath, header=T, nrow=10000)
+    dat = read.csv(as.character(values$datapath), header=T, nrow=10000)
     values$dataset = dat 
   })
   output$choose_fields <- renderUI({
@@ -54,6 +54,18 @@ server <- shinyServer(function(input, output, session) {
       selectInput("field", "choose field", choices=colnames)
     )
   })
+  output$choose_target_levels <- renderUI({
+    if (is.null(input$target))
+      return()
+     vals <-input$target
+     vals = values$dataset[[input$target]]
+     if (!is.numeric(vals)){
+        text = paste(names(table(topn(vals))),collapse=", ")
+     } else {
+       text = paste(hist(vals,plot=F, breaks=10)$breaks,collapse=", ")
+     }
+     textInput("target_levels", "choose target levels", value=text) 
+  })
   observeEvent(input$key,{
     code = input$key.which
     if (code == 37 || code == 39) {
@@ -63,11 +75,12 @@ server <- shinyServer(function(input, output, session) {
   observeEvent({
     input$target 
     input$field
+    input$target_levels
     },{
-      if (is.null(input$target) || is.null(input$field))
+      if (is.null(input$target) || is.null(input$field) || is.null(input$target_levels))
         return()
       output$plot <-renderPlot({
-        mosaic_feature(values$dataset, input$field, input$target)
+        mosaic_feature(values$dataset, input$field, input$target, input$target_levels)
       })
   })
 })

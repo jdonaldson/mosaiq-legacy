@@ -11,10 +11,22 @@ topn = function(d, top=25, otherlabel=NA) {
   }
   factor(ret)
 }
-filter_feature=function(x, top=25){
+filter_feature=function(x, top=11, breaks=NA){
   if (is.numeric(x)){ 
     # If numeric, calculate histogram breaks
-    hx = hist(x,plot=F, breaks=top)
+    if (is.na(breaks)){ 
+      breaks = top 
+    } else {
+      breaks = as.numeric(breaks)
+      if (min(breaks) >= min(x)){
+        breaks = c(min(x), breaks)
+      }
+      if (max(breaks) <= max(x)){
+        breaks = c(breaks, max(x))
+      }
+    }
+    
+    hx = hist(x,plot=F, breaks=breaks)
     x = hx$breaks[findInterval(x, hx$breaks)]
   } else { 
     # Otherwise, capture only top n (25) labels
@@ -23,20 +35,21 @@ filter_feature=function(x, top=25){
   x 
 } 
 
-mosaic_feature = function(dat, feature, target){
+mosaic_feature = function(dat, feature, target, target_levels){
+  target_levels = unlist(strsplit(target_levels, ","))
   x = filter_feature(dat[[feature]])
+  d = as.data.frame(matrix(nrow=nrow(dat)))
   d[feature] = factor(x)
-  d[target] = factor(as.integer(log10(filter_feature(dat[[target]]) + 1)))
+  target_norms = filter_feature(dat[[target]], breaks=target_levels)
+  d[target] = factor(target_norms)
   palette = "RdYlGn"
   if (!is.numeric(target)){
     palette= "Spectral" 
   }
-  
   ggplot(d, aes_string(fill=target)) +  
-    geom_mosaic(aes_string(x=paste0("product(", target, ",", feature, ")"))) +
+    geom_mosaic(aes_string(x=paste0("product(",feature, ")"))) +
     labs(title=paste(feature, "vs.", target)) + 
-    theme(axis.text.x = element_text(size=20,angle = 45, hjust = 1))  + 
-     scale_fill_brewer(palette=palette, direction=-1)
+    theme(axis.text.x = element_text(size=20,angle = 45, hjust = 1))
 }
 
 gen = function(dat, metric, limit, trans){
@@ -54,17 +67,17 @@ gen = function(dat, metric, limit, trans){
 }
 
 seclk_trans = function(x){
-      sapply(x, function(y){
-         if (y <= 5) {
-           y
-         } else if (y > 100) {
-           100 
-         } else if (y > 25) {
-           25
-         } else {
-           10
-         }
-      })
+  sapply(x, function(y){
+    if (y <= 5) {
+      y
+    } else if (y > 100) {
+      100 
+    } else if (y > 25) {
+      25
+    } else {
+      10
+    }
+  })
 }
 
 soqry_trans = function(x){
