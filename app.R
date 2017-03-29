@@ -10,6 +10,7 @@
 library(shiny)
 options(shiny.launch.browser=TRUE)
 library(ggplot2)
+library(ggmosaic)
 library(gridExtra)
 library(shinyFiles)
 print(getwd())
