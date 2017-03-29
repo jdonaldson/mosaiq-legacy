@@ -1,6 +1,6 @@
 # Mosaiq
 
-Intelligent mosaic-based visualziation for cross factor analysis.
+Intelligent mosaic-based visualization for cross factor analysis.
 
 ![mosaiq screenshot](img/mosaiq.png)
 
