@@ -17,8 +17,9 @@ print(getwd())
 source("mosaiq.R")
 settings = ''
 roots = c(wd='~/')
+
 ui <- shinyUI(fluidPage(
-  titlePanel("Mosaiq"),
+  titlePanel(title=div( img(src="http://i.imgur.com/oHzfOOA.png", height="30px"), "Mosaiq")),
   sidebarLayout(
     sidebarPanel(
       shinyFilesButton('file', 'File select', 'Please select a file', FALSE),
@@ -31,6 +32,7 @@ ui <- shinyUI(fluidPage(
     )
   )
 ))
+
 server <- shinyServer(function(input, output, session) {
   output$keypress = renderPrint({input$key})
   values <-reactiveValues(dataset=NULL, datapath = NULL)
