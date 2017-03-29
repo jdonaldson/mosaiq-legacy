@@ -24,8 +24,7 @@ ui <- shinyUI(fluidPage(
     sidebarPanel(
       shinyFilesButton('file', 'File select', 'Please select a file', FALSE),
       verbatimTextOutput('filepaths'),
-      uiOutput("choose_fields"),
-      uiOutput("choose_target_levels")
+      uiOutput("choose_fields")
     ),
     mainPanel(
       plotOutput("plot",height="600px")
@@ -54,8 +53,9 @@ server <- shinyServer(function(input, output, session) {
     colnames <- names(values$dataset)
     column(12,
       br(),
+      selectInput("field", "choose field", choices=colnames),
       selectInput("target", "choose target", choices=colnames),
-      selectInput("field", "choose field", choices=colnames)
+      uiOutput("choose_target_levels")
     )
   })
   output$choose_target_levels <- renderUI({
@@ -69,12 +69,6 @@ server <- shinyServer(function(input, output, session) {
        text = paste(hist(vals,plot=F, breaks=10)$breaks,collapse=", ")
      }
      textInput("target_levels", "choose target levels", value=text) 
-  })
-  observeEvent(input$key,{
-    code = input$key.which
-    if (code == 37 || code == 39) {
-      
-    }
   })
   observeEvent({
     input$target 
