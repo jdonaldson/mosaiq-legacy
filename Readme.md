@@ -8,5 +8,7 @@ Intelligent mosaic-based visualization for cross factor analysis.
 ## Instructions
 
 1. Clone this repo
-2. Install [R](https://cran.r-project.org/)
-3. execute the ``launch`` command in this repo
+2. Install [R](https://cran.r-project.org/) (and maybe [libpcre](http://www.pcre.org/))
+3. Run R inside the project directory (which should install required R
+   packages).
+4. execute the ``launch`` command in this repo
