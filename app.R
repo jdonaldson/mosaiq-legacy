@@ -22,7 +22,7 @@ ui <- shinyUI(fluidPage(
   titlePanel(title=div( img(src="http://i.imgur.com/oHzfOOA.png", height="30px"), "Mosaiq")),
   sidebarLayout(
     sidebarPanel(
-      shinyFilesButton('file', 'File select', 'Please select a file', FALSE),
+      shinyFilesButton('file', 'Csv select', 'Please select a csv file', FALSE),
       verbatimTextOutput('filepaths'),
       uiOutput("choose_fields")
     ),
