@@ -1,5 +1,5 @@
-require(ggmosaic)
-require(stringr)
+library(ggmosaic)
+library(stringr)
 
 topn = function(d, top=25, otherlabel=NA) {
   ret = d
@@ -12,50 +12,50 @@ topn = function(d, top=25, otherlabel=NA) {
   factor(ret)
 }
 filter_feature=function(x, top=11, breaks=NA){
-  if (is.numeric(x)){ 
+  if (is.numeric(x)){
     # If numeric, calculate histogram breaks
-    if (is.na(breaks)){ 
-      breaks = top 
+    if (is.na(breaks[[1]])){
+      breaks = top
     } else {
       breaks = as.numeric(breaks)
-      if (min(breaks) >= min(x)){
-        breaks = c(min(x), breaks)
+      if (min(breaks) >= min(x,na.rm=T)){
+        breaks = c(min(x,na.rm=T), breaks)
       }
-      if (max(breaks) <= max(x)){
-        breaks = c(breaks, max(x))
+      if (max(breaks) <= max(x,na.rm=T)){
+        breaks = c(breaks, max(x,na.rm=T))
       }
     }
-    
+
     hx = hist(x,plot=F, breaks=breaks)
     x = hx$breaks[findInterval(x, hx$breaks)]
-  } else { 
+  } else {
     # Otherwise, capture only top n (25) labels
     x = topn(x,top)
   }
-  x 
-} 
+  x
+}
 
 mosaic_feature = function(dat, feature, target, target_levels){
   target_levels = unlist(strsplit(target_levels, ","))
-  x = filter_feature(dat[[feature]])
+  x = filter_feature(dat[[feature]], top = 25)
   d = as.data.frame(matrix(nrow=nrow(dat)))
   d[feature] = factor(x)
-  target_norms = filter_feature(dat[[target]], breaks=target_levels)
+  target_norms = filter_feature(dat[[target]], top=11, breaks=target_levels)
   d[target] = factor(target_norms)
   palette = "RdYlGn"
   if (!is.numeric(target)){
-    palette= "Spectral" 
+    palette= "Spectral"
   }
-  ggplot(d, aes_string(fill=target)) +  
+  ggplot(d, aes_string(fill=target)) +
     geom_mosaic(aes_string(x=paste0("product(",feature, ")"))) +
-    labs(title=paste(feature, "vs.", target)) + 
+    labs(title=paste(feature, "vs.", target)) +
     theme(axis.text.x = element_text(size=20,angle = 45, hjust = 1))
 }
 
 gen = function(dat, metric, limit, trans){
   dat[[metric]] = trans(dat[[metric]])
   for (i in 1:length(names(dat))){
-    x = names(dat)[i] 
+    x = names(dat)[i]
     if (all(is.na(dat[[x]]))){
       next
     }
@@ -71,7 +71,7 @@ seclk_trans = function(x){
     if (y <= 5) {
       y
     } else if (y > 100) {
-      100 
+      100
     } else if (y > 25) {
       25
     } else {
