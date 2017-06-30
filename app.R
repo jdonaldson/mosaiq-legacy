@@ -55,30 +55,28 @@ server <- shinyServer(function(input, output, session) {
       br(),
       selectInput("field", "choose field", choices=colnames),
       selectInput("target", "choose target", choices=colnames),
-      uiOutput("choose_target_levels")
+      uiOutput("choose_log10_scaling")
     )
   })
-  output$choose_target_levels <- renderUI({
-    if (is.null(input$target))
+  output$choose_log10_scaling <- renderUI({
+    if (is.null(input$target)){
       return()
-     vals <-input$target
-     vals = values$dataset[[input$target]]
-     if (!is.numeric(vals)){
-        text = paste(names(table(topn(vals))),collapse=", ")
-     } else {
-       text = paste(hist(vals,plot=F, breaks=10)$breaks,collapse=", ")
-     }
-     textInput("target_levels", "choose target levels", value=text) 
+    }
+
+    if(!is.numeric(values$dataset[[input$target]])){
+      return()
+    }
+     checkboxInput("log10_scaling", "log10 scale target?", value=FALSE) 
   })
   observeEvent({
     input$target 
     input$field
-    input$target_levels
+    input$log10_scaling
     },{
-      if (is.null(input$target) || is.null(input$field) || is.null(input$target_levels))
+      if (is.null(input$target) || is.null(input$field))
         return()
       output$plot <-renderPlot({
-        mosaic_feature(values$dataset, input$field, input$target, input$target_levels)
+        mosaic_feature(values$dataset, input$field, input$target, input$log10_scaling)
       })
   })
 })

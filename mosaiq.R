@@ -11,42 +11,41 @@ topn = function(d, top=25, otherlabel=NA) {
   }
   factor(ret)
 }
-filter_feature=function(x, top=11, breaks=NA){
-  if (is.numeric(x)){
-    # If numeric, calculate histogram breaks
-    if (is.na(breaks[[1]])){
-      breaks = top
-    } else {
-      breaks = as.numeric(breaks)
-      if (min(breaks) >= min(x,na.rm=T)){
-        breaks = c(min(x,na.rm=T), breaks)
-      }
-      if (max(breaks) <= max(x,na.rm=T)){
-        breaks = c(breaks, max(x,na.rm=T))
-      }
-    }
 
-    hx = hist(x,plot=F, breaks=breaks)
-    x = hx$breaks[findInterval(x, hx$breaks)]
+bucketize = function(x,top=25, breaks = NA ){
+  if (all(is.na(x)))
+    return(c(NA))
+
+  if (is.numeric(x)){
+    if (is.na(breaks)){
+          breaks = hist(x,plot=F)$breaks
+    }
+    nbreaks = paste0(breaks[-length(breaks)], "-", breaks[-1]) 
+    nbreaks = factor(nbreaks,levels=nbreaks)
+    nbreaks[findInterval(x, breaks)]
   } else {
-    # Otherwise, capture only top n (25) labels
-    x = topn(x,top)
+    topn(x,top) 
   }
-  x
 }
 
-mosaic_feature = function(dat, feature, target, target_levels){
-  target_levels = unlist(strsplit(target_levels, ","))
-  x = filter_feature(dat[[feature]], top = 25)
+
+mosaic_feature = function(dat, feature, target, log10_scaling=FALSE){
+  x = bucketize(dat[[feature]], top = 25)
   d = as.data.frame(matrix(nrow=nrow(dat)))
   d[feature] = factor(x)
-  target_norms = filter_feature(dat[[target]], top=11, breaks=target_levels)
-  d[target] = factor(target_norms)
+  d[target] = dat[[target]] 
+  if (log10_scaling){
+    d[target] = factor(round(log10(d[[target]]+1)))
+  } 
+  d[target] = bucketize(d[[target]], top=11)
   palette = "RdYlGn"
   if (!is.numeric(target)){
     palette= "Spectral"
   }
-  ggplot(d, aes_string(fill=target)) +
+  if (all(is.na(d[target])) || all(is.na(d[feature]))){
+    return() 
+  }
+  ggplot(data=d, aes_string(fill=target)) +
     geom_mosaic(aes_string(x=paste0("product(",feature, ")"))) +
     labs(title=paste(feature, "vs.", target)) +
     theme(axis.text.x = element_text(size=20,angle = 45, hjust = 1))
@@ -59,7 +58,6 @@ gen = function(dat, metric, limit, trans){
     if (all(is.na(dat[[x]]))){
       next
     }
-    message(x)
     png(paste0(name,'/', x,'.png'), 900,600)
     print(mosaic_feature(dat, x, metric))
     dev.off()

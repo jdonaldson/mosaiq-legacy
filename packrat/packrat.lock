@@ -1,6 +1,6 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.8.1
-RVersion: 3.3.3
+RVersion: 3.3.2
 Repos: CRAN=https://cran.rstudio.com/
 
 Package: BH
@@ -10,8 +10,14 @@ Hash: 14dfb3e8ffe20996118306ff4de1fab2
 
 Package: DBI
 Source: CRAN
-Version: 0.6
-Hash: c1a897fa11e50c1f70258830fc50b1f3
+Version: 0.6-1
+Hash: 4aef5bda70897c1663d5b8bae2f4419a
+
+Package: FSelector
+Source: CRAN
+Version: 0.20
+Hash: 169a4c52a4cbe95bde727f291b316df1
+Requires: RWeka, digest, entropy, randomForest
 
 Package: NHANES
 Source: CRAN
@@ -32,6 +38,18 @@ Package: RJSONIO
 Source: CRAN
 Version: 1.3-0
 Hash: fb672e20eb6f3010a3639f855d8ef6de
+
+Package: RWeka
+Source: CRAN
+Version: 0.4-26
+Hash: f3e657fb471a4aea0ab4bd9a927b63cb
+Requires: RWekajars, rJava
+
+Package: RWekajars
+Source: CRAN
+Version: 3.9.1-3
+Hash: 6338b2bfad16916a5f64572f5df34b11
+Requires: rJava
 
 Package: Rcpp
 Source: CRAN
@@ -74,6 +92,11 @@ Version: 0.5.0
 Hash: 673660fd0b947477dab1044abc8b2c95
 Requires: BH, DBI, R6, Rcpp, assertthat, lazyeval, magrittr, tibble
 
+Package: entropy
+Source: CRAN
+Version: 1.2.1
+Hash: ccff926ff232f7c19b4c84bab3d3d6d3
+
 Package: ggmosaic
 Source: CRAN
 Version: 0.1.2
@@ -101,7 +124,7 @@ Hash: cd78381a9d3fea966ac39bd0daaf5554
 Package: hexbin
 Source: CRAN
 Version: 1.27.1
-Hash: 378383b2c37556649fd6b2ee0be7e2a5
+Hash: 9f94c576cc4b9e83fd714ae8387272e6
 
 Package: htmltools
 Source: CRAN
@@ -129,8 +152,8 @@ Requires: R6, curl, jsonlite, mime, openssl
 
 Package: jsonlite
 Source: CRAN
-Version: 1.3
-Hash: b9cc3c97b7a6cd513e9b516fe881d6c9
+Version: 1.4
+Hash: 24cc0ffeb1771d710173d9803a131870
 
 Package: labeling
 Source: CRAN
@@ -194,6 +217,16 @@ Version: 0.2.2
 Hash: 9f218b40dee7fe7f942039f974bd98b8
 Requires: BH, Rcpp, dplyr, lazyeval, magrittr
 
+Package: rJava
+Source: CRAN
+Version: 0.9-8
+Hash: 3e8627a2a5bd45c9bad6112acfc231d9
+
+Package: randomForest
+Source: CRAN
+Version: 4.6-12
+Hash: b37274857316c7b9431cc7f72aaffb77
+
 Package: reshape2
 Source: CRAN
 Version: 1.4.2
@@ -208,8 +241,8 @@ Requires: RColorBrewer, Rcpp, dichromat, labeling, munsell, plyr
 
 Package: shiny
 Source: CRAN
-Version: 1.0.0
-Hash: 315fd5ac8ada4047f81af7c19d5a5974
+Version: 1.0.1
+Hash: 26d81d2e377b54e68a02f3651c39df81
 Requires: R6, digest, htmltools, httpuv, jsonlite, mime, sourcetools,
     xtable
 
@@ -221,13 +254,13 @@ Requires: RJSONIO, htmltools, shiny
 
 Package: sourcetools
 Source: CRAN
-Version: 0.1.5
-Hash: 04ddeb1c288302222562326a471e2945
+Version: 0.1.6
+Hash: 226d56d7469587da40b0f96180e711b4
 
 Package: stringi
 Source: CRAN
-Version: 1.1.3
-Hash: 458dfc7d682c0f80909521fe482f7c6d
+Version: 1.1.5
+Hash: b6308e49357a0b475f433599e0d8b5eb
 
 Package: stringr
 Source: CRAN
@@ -237,9 +270,9 @@ Requires: magrittr, stringi
 
 Package: tibble
 Source: CRAN
-Version: 1.2
-Hash: 0ad215aed62ba7a18bc4c5b89835c934
-Requires: Rcpp, assertthat, lazyeval
+Version: 1.3.0
+Hash: 8de64ed3345488e66b676875ed1ebdce
+Requires: Rcpp, lazyeval
 
 Package: tidyr
 Source: CRAN
