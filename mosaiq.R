@@ -18,7 +18,7 @@ bucketize = function(x,top=25, breaks = NA ){
 
   if (is.numeric(x)){
     if (is.na(breaks)){
-          breaks = hist(x,plot=F)$breaks
+          breaks = hist(x,plot=F,breaks=top)$breaks
     }
     nbreaks = paste0(breaks[-length(breaks)], "-", breaks[-1]) 
     nbreaks = factor(nbreaks,levels=nbreaks)
@@ -29,26 +29,37 @@ bucketize = function(x,top=25, breaks = NA ){
 }
 
 
-mosaic_feature = function(dat, feature, target, log10_scaling=FALSE){
+mosaic_feature = function(dat, feature, target, log10_scaling=FALSE, invert_color_ramp=FALSE){
+  if (is.null(log10_scaling)){
+    log10_scaling=FALSE
+  }
+  if (is.null(invert_color_ramp)){
+    invert_color_ramp= FALSE
+  }
   x = bucketize(dat[[feature]], top = 25)
   d = as.data.frame(matrix(nrow=nrow(dat)))
   d[feature] = factor(x)
   d[target] = dat[[target]] 
+  palette = "RdYlGn"
+  if (!is.numeric(dat[[target]])){
+    palette= "Spectral"
+  }
   if (log10_scaling){
     d[target] = factor(round(log10(d[[target]]+1)))
   } 
-  d[target] = bucketize(d[[target]], top=11)
-  palette = "RdYlGn"
-  if (!is.numeric(target)){
-    palette= "Spectral"
-  }
+  d[target] = bucketize(d[[target]], top=10)
   if (all(is.na(d[target])) || all(is.na(d[feature]))){
     return() 
+  }
+  direction = 1
+  if (invert_color_ramp){
+   direction = -1 
   }
   ggplot(data=d, aes_string(fill=target)) +
     geom_mosaic(aes_string(x=paste0("product(",feature, ")"))) +
     labs(title=paste(feature, "vs.", target)) +
-    theme(axis.text.x = element_text(size=20,angle = 45, hjust = 1))
+    theme(axis.text.x = element_text(size=20,angle = 45, hjust = 1)) + 
+    scale_fill_brewer(palette=palette,direction=direction)
 }
 
 gen = function(dat, metric, limit, trans){

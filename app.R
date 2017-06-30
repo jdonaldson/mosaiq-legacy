@@ -55,10 +55,10 @@ server <- shinyServer(function(input, output, session) {
       br(),
       selectInput("field", "choose field", choices=colnames),
       selectInput("target", "choose target", choices=colnames),
-      uiOutput("choose_log10_scaling")
+      uiOutput("choose_numeric_options")
     )
   })
-  output$choose_log10_scaling <- renderUI({
+  output$choose_numeric_options <- renderUI({
     if (is.null(input$target)){
       return()
     }
@@ -66,17 +66,21 @@ server <- shinyServer(function(input, output, session) {
     if(!is.numeric(values$dataset[[input$target]])){
       return()
     }
-     checkboxInput("log10_scaling", "log10 scale target?", value=FALSE) 
+    fluidRow(
+     checkboxInput("log10_scaling", "log10 scale target?", value=FALSE) ,
+     checkboxInput("invert_color_ramp", "invert color ramp", value=FALSE) 
+    )
   })
   observeEvent({
     input$target 
     input$field
     input$log10_scaling
+    input$invert_color_ramp
     },{
       if (is.null(input$target) || is.null(input$field))
         return()
       output$plot <-renderPlot({
-        mosaic_feature(values$dataset, input$field, input$target, input$log10_scaling)
+        mosaic_feature(values$dataset, input$field, input$target, input$log10_scaling, input$invert_color_ramp)
       })
   })
 })
