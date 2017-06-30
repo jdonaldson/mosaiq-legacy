@@ -67,8 +67,8 @@ server <- shinyServer(function(input, output, session) {
       return()
     }
     fluidRow(
-     checkboxInput("log10_scaling", "log10 scale target?", value=FALSE) ,
-     checkboxInput("invert_color_ramp", "invert color ramp", value=FALSE) 
+     checkboxInput("log10_scaling", "log10 scale target", value=FALSE) ,
+     checkboxInput("invert_color_ramp", "invert target color ramp", value=FALSE) 
     )
   })
   observeEvent({
