@@ -45,7 +45,7 @@ mosaic_feature = function(dat, feature, target, log10_scaling=FALSE, invert_colo
     palette= "Spectral"
   }
   if (log10_scaling){
-    d[target] = factor(floor(log10(d[[target]]+1)))
+    d[target] = factor(10^floor(log10(d[[target]]+1)))
   } 
   d[target] = bucketize(d[[target]], top=10)
   if (all(is.na(d[target])) || all(is.na(d[feature]))){
