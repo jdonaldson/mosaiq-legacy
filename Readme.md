@@ -1,6 +1,11 @@
+THIS IS THE LEGACY REPO, PLEASE SEE THE NEW PYTHON REPO AT : https://github.com/jdonaldson/mosaiq
+
+
 # Mosaiq
 
 Intelligent mosaic-based visualization for analysis of binned/categorical data.
+
+
 
 ![mosaiq screenshot](img/mosaiq.png)
 
